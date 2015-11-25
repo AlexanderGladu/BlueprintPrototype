@@ -8,8 +8,7 @@ import android.view.MenuItem;
 /**
  * Created by 100481892 on 11/25/2015.
  */
-
-public class MainActivity extends Activity {
+public class AddFurnitureActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,21 +33,8 @@ public class MainActivity extends Activity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        } else if (id == R.id.add_room) {
-            addRoom();
-        } else if (id == R.id.add_furniture) {
-            addFurniture();
         }
 
         return super.onOptionsItemSelected(item);
     }
-
-    public void addRoom() {
-
-    }
-
-    public void addFurniture() {
-
-    }
-
 }

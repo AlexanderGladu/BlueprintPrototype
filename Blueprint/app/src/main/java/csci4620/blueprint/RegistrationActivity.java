@@ -1,20 +1,29 @@
 package csci4620.blueprint;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 /**
  * Created by 100481892 on 11/25/2015.
  */
 
-public class MainActivity extends Activity {
+public class RegistrationActivity extends Activity{
+
+    Intent registerIntent;
+    String username;
+    String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_registration);
+
+        registerIntent = getIntent();
+
     }
 
     @Override
@@ -34,21 +43,22 @@ public class MainActivity extends Activity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        } else if (id == R.id.add_room) {
-            addRoom();
-        } else if (id == R.id.add_furniture) {
-            addFurniture();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void addRoom() {
-
+    public void signp(View view) {
+        signup();
     }
 
-    public void addFurniture() {
+    public void signup() {
+        registerIntent.putExtra("NewUser", new User(
+                (findViewById(R.id.username_input)).toString(),
+                (findViewById(R.id.password_input)).toString()));
 
+        setResult(RESULT_OK, registerIntent);
+        finish();
     }
-
 }
+
