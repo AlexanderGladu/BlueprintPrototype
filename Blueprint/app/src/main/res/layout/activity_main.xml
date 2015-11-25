@@ -3,6 +3,21 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/room_name_label"
+        android:layout_gravity="center_horizontal" />
+
+    <ImageView
+        class="csci4620.blueprint.DrawView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/draw_view"
+        android:contentDescription="@string/view_description" />
 
 </LinearLayout>

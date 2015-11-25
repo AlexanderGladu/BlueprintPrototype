@@ -1,6 +1,7 @@
 <resources>
 
     <string name="app_name">Blueprint</string>
+
     <string name="login_label">Login</string>
     <string name="register_label">Register</string>
     <string name="information_label">Information</string>
@@ -11,6 +12,11 @@
     <string name="couch_label">Couch</string>
     <string name="chair_label">Chair</string>
     <string name="table_label">Table</string>
+    <string name="no_room_label">No Room Specified</string>
+
+    <string name="dialog_no_room">Error: No Room Selected/Present</string>
+    <string name="dialog_go_there">Make Room</string>
+    <string name="dialog_cancel">Cancel</string>
 
     <string name="room_label">Room Dimensions</string>
     <string name="furniture_label"> Dimensions</string>
@@ -26,6 +32,8 @@
     <string name="height_hint">Height:</string>
     <string name="measure_hint">m</string>
     <string name="triple_zero_hint">0.00</string>
+
+    <string name="view_description">View To Be Filled</string>
 
     <string name="action_settings">Settings</string>
 

@@ -52,6 +52,7 @@ public class AddFurnitureActivity extends Activity {
         if (responseCode == RESULT_OK) {
             tempFurniture = (Furniture) resultIntent.getSerializableExtra("NewFurniture");
 
+            resultIntent.putExtra("Ident", 1);
             resultIntent.putExtra("Furniture", tempFurniture);
             setResult(RESULT_OK, resultIntent);
             finish();

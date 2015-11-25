@@ -55,6 +55,7 @@ public class AddRoomActivity extends Activity {
                 Double.parseDouble(findViewById(R.id.width_input).toString()),
                 Double.parseDouble(findViewById(R.id.height_input).toString()));
 
+        addRoomIntent.putExtra("Ident", 0);
         addRoomIntent.putExtra("NewRoom", tempRoom);
         setResult(RESULT_OK, addRoomIntent);
         finish();
