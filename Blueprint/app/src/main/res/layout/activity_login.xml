@@ -4,12 +4,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:gravity="center_vertical|center_horizontal">
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="-50dp"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/username_input"
         android:layout_gravity="center_horizontal"
@@ -21,29 +22,34 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/password_input"
         android:layout_gravity="center_horizontal"
-        android:hint="@string/password_hint" />
+        android:hint="@string/password_hint"
+        android:layout_marginTop="15dp" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="25dp" >
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:weightSum="1">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/register_label"
+            android:id="@+id/register_button"
+            android:onClick="register"
+            android:layout_gravity="left"
+            android:layout_marginRight="25dp" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/login_label"
             android:id="@+id/login_button"
-            android:onClick="login" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:text="@string/register_label"
-            android:id="@+id/register_button"
-            android:onClick="register" />
+            android:onClick="login"
+            android:layout_weight="1"
+            android:layout_gravity="right" />
 
     </LinearLayout>
 

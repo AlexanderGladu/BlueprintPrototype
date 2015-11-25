@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
 /**
@@ -15,6 +16,10 @@ public class DimensionsActivity extends Activity {
 
     Intent getDimensions;
     Furniture tempFurniture;
+
+    double length;
+    double width;
+    double height;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +56,20 @@ public class DimensionsActivity extends Activity {
     }
 
     public void addDimensions(View view) {
+
+        EditText getDouble = (EditText) findViewById(R.id.length_input);
+        length = Double.parseDouble(getDouble.getText().toString());
+
+        getDouble = (EditText) findViewById(R.id.width_input);
+        width = Double.parseDouble(getDouble.getText().toString());
+
+        getDouble = (EditText) findViewById(R.id.height_input);
+        height = Double.parseDouble(getDouble.getText().toString());
+
         tempFurniture = new Furniture(
                 getDimensions.getStringExtra("Type"),
                 findViewById(R.id.name_input).toString(),
-                Double.parseDouble(findViewById(R.id.length_input).toString()),
-                Double.parseDouble(findViewById(R.id.width_input).toString()),
-                Double.parseDouble(findViewById(R.id.height_input).toString())
-        );
+                length, width, height);
 
         getDimensions.putExtra("NewFurniture", tempFurniture);
         setResult(RESULT_OK, getDimensions);

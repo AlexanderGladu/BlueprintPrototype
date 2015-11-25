@@ -9,12 +9,12 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/room_name_label"
+        android:hint="@string/no_room_label"
         android:layout_gravity="center_horizontal" />
 
-    <ImageView
-        class="csci4620.blueprint.DrawView"
+    <csci4620.blueprint.DrawView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/draw_view"

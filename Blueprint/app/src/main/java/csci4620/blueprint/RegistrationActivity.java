@@ -48,7 +48,7 @@ public class RegistrationActivity extends Activity{
         return super.onOptionsItemSelected(item);
     }
 
-    public void signp(View view) {
+    public void signup(View view) {
         signup();
     }
 

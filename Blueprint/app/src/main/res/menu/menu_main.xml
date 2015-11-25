@@ -14,11 +14,11 @@
         android:id="@+id/add_room"
         android:title="@string/add_room_label"
         android:orderInCategory="2"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/add_furniture"
         android:title="@string/add_furniture_label"
         android:orderInCategory="3"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 </menu>

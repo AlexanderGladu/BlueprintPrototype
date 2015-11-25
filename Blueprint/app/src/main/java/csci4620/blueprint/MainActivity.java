@@ -6,11 +6,13 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -21,9 +23,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends Activity {
 
-    Paint usePaint;
     DrawView drawView;
-
+    Canvas canvas = new Canvas();
     User curUser;
 
     Intent mainIntent;
@@ -44,12 +45,17 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        tempRooms = new ArrayList<>();
+        tempFurnitures = new ArrayList<>();
+
         mainIntent = getIntent();
         curUser = (User) mainIntent.getSerializableExtra("User");
-        drawView = new DrawView(this);
 
         roomName = (TextView) findViewById(R.id.room_name_label);
         roomName.setText(getResources().getString(R.string.no_room_label));
+
+        drawView = new DrawView(this);
+
     }
 
     @Override
@@ -78,27 +84,6 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static class NoRoomDialogFragment extends DialogFragment {
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the Builder class for convenient dialog construction
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage(R.string.dialog_no_room)
-                    .setPositiveButton(R.string.dialog_go_there, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            goToRoom = 1;
-                        }
-                    })
-                    .setNegativeButton(R.string.dialog_cancel, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dismiss();
-                        }
-                    });
-            // Create the AlertDialog object and return it
-            return builder.create();
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int responseCode, Intent resultIntent) {
         super.onActivityResult(requestCode, responseCode, resultIntent);
@@ -106,12 +91,12 @@ public class MainActivity extends Activity {
         if (responseCode == RESULT_OK) {
             if (requestCode == 474785743) {
                 tempFurnitures.add((Furniture) resultIntent.getSerializableExtra("NewFurniture"));
-                usePaint.setColor(Color.BLUE);
-                drawView.setPaint(usePaint);
-                drawView.drawFurniture(tempFurnitures.get(furnitureIter));
+                drawView.draw(canvas);
+                drawView.setTask(1);
+                drawView.draw(canvas);
                 furnitureIter += 1;
-            } else if (requestCode == 4997) {
-                drawView.clearCanvas();
+
+            } else if (requestCode == 122334) {
                 tempRooms.add((Room) resultIntent.getSerializableExtra("NewRoom"));
 
                 roomName = (TextView) findViewById(R.id.room_name_label);
@@ -121,26 +106,20 @@ public class MainActivity extends Activity {
                     roomName.setText(tempRooms.get(roomsIter).getName());
                 }
 
-                usePaint.setColor(Color.BLACK);
-                drawView.setPaint(usePaint);
-                drawView.drawRoom(tempRooms.get(roomsIter));
+                setContentView(drawView);
                 roomsIter += 1;
-            } else if (requestCode == 694997) {
-
             }
         }
-
     }
 
     public void addRoom() {
         addRoomIntent = new Intent(MainActivity.this, AddRoomActivity.class);
-        startActivityForResult(addRoomIntent, 4997);
+        startActivityForResult(addRoomIntent, 122334);
     }
 
     public void addFurniture() {
         if (tempRooms.size() == 0) {
-            Intent dialogIntent = new Intent(MainActivity.this, NoRoomDialogFragment.class);
-            startActivityForResult(dialogIntent, 694997);
+
         } else {
             addFurnitureIntent = new Intent(MainActivity.this, AddFurnitureActivity.class);
             startActivityForResult(addFurnitureIntent, 474785743);

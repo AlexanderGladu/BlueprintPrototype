@@ -6,12 +6,11 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:supportsRtl="true"
         android:theme="@style/AppTheme" >
+
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:name=".LoginActivity"
+            android:label="@string/login_label" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,33 +19,28 @@
         </activity>
 
         <activity
-            android:name=".LoginActivity"
-            android:label="@string/login_label"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:name=".MainActivity"
+            android:label="@string/app_name" >
         </activity>
 
         <activity
             android:name=".RegistrationActivity"
-            android:label="@string/register_label"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:label="@string/register_label" >
         </activity>
 
         <activity
             android:name=".AddRoomActivity"
-            android:label="@string/add_room_label"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:label="@string/add_room_label" >
         </activity>
 
         <activity
             android:name=".AddFurnitureActivity"
-            android:label="@string/add_furniture_label"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:label="@string/add_furniture_label" >
         </activity>
 
         <activity
             android:name=".DimensionsActivity"
-            android:label="@string/dimensions_label"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:label="@string/dimensions_label" >
         </activity>
 
     </application>

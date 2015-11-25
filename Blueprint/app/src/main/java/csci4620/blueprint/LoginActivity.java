@@ -62,9 +62,9 @@ public class LoginActivity extends Activity {
 
     public void loginExist() {
         EditText usernameText = (EditText) findViewById(R.id.username_input);
-        username = usernameText.toString();
+        username = usernameText.getText().toString();
         EditText passwordText = (EditText) findViewById(R.id.password_input);
-        password = passwordText.toString();
+        password = passwordText.getText().toString();
 
         if (username.equals("me@email.ca") && password.equals("Hello")) {
             User user = new User(username, password);
