@@ -12,6 +12,9 @@
     <string name="chair_label">Chair</string>
     <string name="table_label">Table</string>
 
+    <string name="room_label">Room Dimensions</string>
+    <string name="furniture_label"> Dimensions</string>
+
     <string name="username_hint">Username:</string>
     <string name="password_hint">Password:</string>
     <string name="name_hint">Name:</string>

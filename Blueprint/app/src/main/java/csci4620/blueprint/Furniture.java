@@ -1,9 +1,11 @@
 package csci4620.blueprint;
 
+import java.io.Serializable;
+
 /**
  * Created by 100481892 on 11/25/2015.
  */
-public class Furniture {
+public class Furniture implements Serializable {
     private String type;
     private String name;
     private double length;

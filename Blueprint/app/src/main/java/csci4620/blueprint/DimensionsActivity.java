@@ -1,20 +1,31 @@
 package csci4620.blueprint;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 /**
  * Created by 100481892 on 11/25/2015.
  */
 public class DimensionsActivity extends Activity {
 
+    Intent getDimensions;
+    Furniture tempFurniture;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_dimensions);
+
+        getDimensions = getIntent();
+
+        TextView addTitle = (TextView) findViewById(R.id.add_what_label);
+        addTitle.setText(getDimensions.getStringExtra("Type") +
+                         getResources().getString(R.string.furniture_label));
     }
 
     @Override
@@ -40,6 +51,16 @@ public class DimensionsActivity extends Activity {
     }
 
     public void addDimensions(View view) {
+        tempFurniture = new Furniture(
+                getDimensions.getStringExtra("Type"),
+                findViewById(R.id.name_input).toString(),
+                Double.parseDouble(findViewById(R.id.length_input).toString()),
+                Double.parseDouble(findViewById(R.id.width_input).toString()),
+                Double.parseDouble(findViewById(R.id.height_input).toString())
+        );
 
+        getDimensions.putExtra("NewFurniture", tempFurniture);
+        setResult(RESULT_OK, getDimensions);
+        finish();
     }
 }

@@ -50,9 +50,10 @@ public class LoginActivity extends Activity {
     public void onActivityResult(int requestCode, int responseCode, Intent resultIntent) {
         super.onActivityResult(requestCode, responseCode, resultIntent);
 
-        tempUser = (User) resultIntent.getSerializableExtra("NewUser");
-        loginNew(tempUser);
-
+        if (responseCode == RESULT_OK) {
+            tempUser = (User) resultIntent.getSerializableExtra("NewUser");
+            loginNew(tempUser);
+        }
     }
 
     public void login(View view) {
