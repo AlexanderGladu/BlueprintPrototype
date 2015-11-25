@@ -14,8 +14,15 @@
 
     <string name="username_hint">Username:</string>
     <string name="password_hint">Password:</string>
+    <string name="name_hint">Name:</string>
     <string name="failed_hint">Invalid Username/Password:</string>
     <string name="select_hint">Select Type Of Furniture</string>
+
+    <string name="length_hint">Length:</string>
+    <string name="width_hint">Width:</string>
+    <string name="height_hint">Height:</string>
+    <string name="measure_hint">m</string>
+    <string name="triple_zero_hint">0.00</string>
 
     <string name="action_settings">Settings</string>
 
