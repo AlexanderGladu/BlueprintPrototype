@@ -15,7 +15,7 @@ import java.util.ArrayList;
  */
 public class DrawView extends View {
 
-    Paint paint;
+    Paint mypaint;
     Canvas canvas;
     double convMetToPix;
 
@@ -25,7 +25,7 @@ public class DrawView extends View {
     float nextY;
 
     int task = -1;
-
+    int errorFlag = 0;
     int roomDraw = 0;
     int furnitureDraw = 0;
 
@@ -44,7 +44,7 @@ public class DrawView extends View {
     public void onDraw(Canvas canvas) {
         ArrayList<Float> points;
         if (task == 1) {
-            Paint mypaint = new Paint();
+            mypaint = new Paint();
             mypaint.setColor(Color.BLACK);
             points = drawRoom(room.get(roomDraw));
             int pointIter = 0;
@@ -61,23 +61,37 @@ public class DrawView extends View {
             points = new ArrayList<>();
             while (furnitureDraw < furniture.size()) {
                 points = drawFurniture(furniture.get(furnitureDraw));
-                pointIter = 0;
-                while (pointIter < points.size()) {
-                    canvas.drawLine(points.get(pointIter),
-                            points.get(pointIter + 1),
-                            points.get(pointIter + 2),
-                            points.get(pointIter + 3),
-                            mypaint);
-                    pointIter += 4;
+                if (errorFlag == 1) {
+                    pointIter = 0;
+                    while (pointIter < points.size()) {
+                        canvas.drawLine(points.get(pointIter),
+                                points.get(pointIter + 1),
+                                points.get(pointIter + 2),
+                                points.get(pointIter + 3),
+                                mypaint);
+                        pointIter += 4;
+                    }
+                    furnitureDraw += 1;
+                    errorFlag = 0;
+                } else {
+                    pointIter = 0;
+                    while (pointIter < points.size()) {
+                        canvas.drawLine(points.get(pointIter),
+                                points.get(pointIter + 1),
+                                points.get(pointIter + 2),
+                                points.get(pointIter + 3),
+                                mypaint);
+                        pointIter += 4;
+                    }
+                    furnitureDraw += 1;
+                    invalidate();
                 }
-                furnitureDraw += 1;
             }
-            invalidate();
 
             furnitureDraw = 0;
         } else if (task == 0) {
             furniture = new ArrayList<>();
-            Paint mypaint = new Paint();
+            mypaint = new Paint();
             mypaint.setColor(Color.BLACK);
             points = drawRoom(room.get(roomDraw));
             int pointIter = 0;
@@ -115,8 +129,8 @@ public class DrawView extends View {
     }
 
     public void setPaint(Paint paint) {
-        this.paint = paint;
-        this.paint.setStrokeWidth((float) 5);
+        this.mypaint = paint;
+        this.mypaint.setStrokeWidth((float) 5);
     }
 
     public ArrayList<Float> drawFurniture(Furniture furniture) {
@@ -148,51 +162,54 @@ public class DrawView extends View {
         }
         if ((width + nextY) > (room.get(roomDraw).getWidth()*convMetToPix)) {
             nextY = lastY;
-            if ((width + nextY) > (room.get(roomDraw).getWidth()*convMetToPix)) {
-                drawError(furniture);
-            }
         }
 
-        point.add((float) nextX);
-        point.add((float) nextY);
-        point.add((float) nextX);
-        point.add((float) (nextY + width));
+        if ((width + nextY) > (room.get(roomDraw).getWidth()*convMetToPix)
+                || (length + nextX) > (room.get(roomDraw).getLength()*convMetToPix)) {
+            point = drawError(furniture);
+            return point;
+        } else {
+            point.add((float) nextX);
+            point.add((float) nextY);
+            point.add((float) nextX);
+            point.add((float) (nextY + width));
 
-        point.add((float) nextX);
-        point.add((float) (nextY + width));
-        point.add((float) (nextX + length));
-        point.add((float) (nextY + width));
+            point.add((float) nextX);
+            point.add((float) (nextY + width));
+            point.add((float) (nextX + length));
+            point.add((float) (nextY + width));
 
-        point.add((float) (nextX + length));
-        point.add((float) (nextY + width));
-        point.add((float) (nextX + length));
-        point.add((float) nextY);
+            point.add((float) (nextX + length));
+            point.add((float) (nextY + width));
+            point.add((float) (nextX + length));
+            point.add((float) nextY);
 
-        point.add((float) (nextX + length));
-        point.add((float) nextY);
-        point.add((float) nextX);
-        point.add((float) nextY);
+            point.add((float) (nextX + length));
+            point.add((float) nextY);
+            point.add((float) nextX);
+            point.add((float) nextY);
 
-        double hLength = length/2.0;
+            double hLength = length/2.0;
 
-        point.add((float) (nextX + hLength));
-        point.add((float) nextY);
-        point.add((float) (nextX + hLength));
-        point.add((float) (nextY + width));
+            point.add((float) (nextX + hLength));
+            point.add((float) nextY);
+            point.add((float) (nextX + hLength));
+            point.add((float) (nextY + width));
 
-        double qWidth = 3*(width/4.0);
+            double qWidth = 3*(width/4.0);
 
-        point.add((float) nextX);
-        point.add((float) (nextY + qWidth));
-        point.add((float) (nextX + length));
-        point.add((float) (nextY + qWidth));
+            point.add((float) nextX);
+            point.add((float) (nextY + qWidth));
+            point.add((float) (nextX + length));
+            point.add((float) (nextY + qWidth));
 
-        lastX = nextX;
-        lastY = nextY;
-        nextX = nextX + (float) length;
-        nextY = nextY + (float) width;
+            lastX = nextX;
+            lastY = nextY;
+            nextX = nextX + (float) length;
+            nextY = nextY + (float) width;
 
-        return point;
+            return point;
+        }
     }
 
     public ArrayList<Float> drawChair(Furniture furniture) {
@@ -207,44 +224,47 @@ public class DrawView extends View {
         }
         if ((width + nextY) > (room.get(roomDraw).getWidth()*convMetToPix)) {
             nextY = lastY;
-            if ((width + nextY) > (room.get(roomDraw).getWidth()*convMetToPix)) {
-                drawError(furniture);
-            }
         }
 
-        point.add((float) nextX);
-        point.add((float) nextY);
-        point.add((float) nextX);
-        point.add((float) (nextY + width));
+        if ((width + nextY) > (room.get(roomDraw).getWidth()*convMetToPix)
+                || (length + nextX) > (room.get(roomDraw).getLength()*convMetToPix)) {
+            point = drawError(furniture);
+            return point;
+        } else {
+            point.add((float) nextX);
+            point.add((float) nextY);
+            point.add((float) nextX);
+            point.add((float) (nextY + width));
 
-        point.add((float) nextX);
-        point.add((float) (nextY + width));
-        point.add((float) (nextX + length));
-        point.add((float) (nextY + width));
+            point.add((float) nextX);
+            point.add((float) (nextY + width));
+            point.add((float) (nextX + length));
+            point.add((float) (nextY + width));
 
-        point.add((float) (nextX + length));
-        point.add((float) (nextY + width));
-        point.add((float) (nextX + length));
-        point.add((float) nextY);
+            point.add((float) (nextX + length));
+            point.add((float) (nextY + width));
+            point.add((float) (nextX + length));
+            point.add((float) nextY);
 
-        point.add((float) (nextX + length));
-        point.add((float) nextY);
-        point.add((float) nextX);
-        point.add((float) nextY);
+            point.add((float) (nextX + length));
+            point.add((float) nextY);
+            point.add((float) nextX);
+            point.add((float) nextY);
 
-        double qWidth = 3*(width/4.0);
+            double qWidth = 3 * (width / 4.0);
 
-        point.add((float) nextX);
-        point.add((float) (nextY + qWidth));
-        point.add((float) (nextX + length));
-        point.add((float) (nextY + qWidth));
+            point.add((float) nextX);
+            point.add((float) (nextY + qWidth));
+            point.add((float) (nextX + length));
+            point.add((float) (nextY + qWidth));
 
-        lastX = nextX;
-        lastY = nextY;
-        nextX = nextX + (float) length;
-        nextY = nextY + (float) width;
+            lastX = nextX;
+            lastY = nextY;
+            nextX = nextX + (float) length;
+            nextY = nextY + (float) width;
 
-        return point;
+            return point;
+        }
     }
 
     public ArrayList<Float> drawTable(Furniture furniture) {
@@ -258,47 +278,53 @@ public class DrawView extends View {
         }
         if ((width + nextY) > (room.get(roomDraw).getWidth()*convMetToPix)) {
             nextY = lastY;
-            if ((width + nextY) > (room.get(roomDraw).getWidth()*convMetToPix)) {
-                drawError(furniture);
-            }
         }
 
-        point.add((float) nextX);
-        point.add((float) nextY);
-        point.add((float) nextX);
-        point.add((float) (nextY + width));
+        if ((width + nextY) > (room.get(roomDraw).getWidth()*convMetToPix)
+                || (length + nextX) > (room.get(roomDraw).getLength()*convMetToPix)) {
+            point = drawError(furniture);
+            return point;
+        } else {
+            point.add((float) nextX);
+            point.add((float) nextY);
+            point.add((float) nextX);
+            point.add((float) (nextY + width));
 
-        point.add((float) nextX);
-        point.add((float) (nextY + width));
-        point.add((float) (nextX + length));
-        point.add((float) (nextY + width));
+            point.add((float) nextX);
+            point.add((float) (nextY + width));
+            point.add((float) (nextX + length));
+            point.add((float) (nextY + width));
 
-        point.add((float) (nextX + length));
-        point.add((float) (nextY + width));
-        point.add((float) (nextX + length));
-        point.add((float) nextY);
+            point.add((float) (nextX + length));
+            point.add((float) (nextY + width));
+            point.add((float) (nextX + length));
+            point.add((float) nextY);
 
-        point.add((float) (nextX + length));
-        point.add((float) nextY);
-        point.add((float) nextX);
-        point.add((float) nextY);
+            point.add((float) (nextX + length));
+            point.add((float) nextY);
+            point.add((float) nextX);
+            point.add((float) nextY);
 
-        lastX = nextX;
-        lastY = nextY;
-        nextX = nextX + (float) length;
-        nextY = nextY + (float) width;
+            lastX = nextX;
+            lastY = nextY;
+            nextX = nextX + (float) length;
+            nextY = nextY + (float) width;
 
-        return point;
+            return point;
+        }
     }
 
     public ArrayList<Float> drawError(Furniture furniture) {
 
         ArrayList<Float> point = new ArrayList<>();
 
+        mypaint.setColor(Color.RED);
+        errorFlag = 1;
+
         point.add((float) nextX);
         point.add((float) nextY);
-        point.add((float) 500.0);
-        point.add((float) 500.0);
+        point.add((float) 1000.0);
+        point.add((float) 1000.0);
 
         return point;
     }
