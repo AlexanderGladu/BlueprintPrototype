@@ -9,10 +9,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:textAppearance="?android:attr/textAppearanceLarge"
+        android:editable = "true"
         android:id="@+id/room_name_label"
-        android:hint="@string/no_room_label"
-        android:layout_gravity="center_horizontal" />
+        android:hint="@string/no_room_label" />
 
     <csci4620.blueprint.DrawView
         android:layout_width="match_parent"

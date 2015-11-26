@@ -21,6 +21,8 @@ public class DimensionsActivity extends Activity {
     double width;
     double height;
 
+    String name;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +32,7 @@ public class DimensionsActivity extends Activity {
 
         TextView addTitle = (TextView) findViewById(R.id.add_what_label);
         addTitle.setText(getDimensions.getStringExtra("Type") +
-                         getResources().getString(R.string.furniture_label));
+                         " " + getResources().getString(R.string.furniture_label));
     }
 
     @Override
@@ -66,10 +68,12 @@ public class DimensionsActivity extends Activity {
         getDouble = (EditText) findViewById(R.id.height_input);
         height = Double.parseDouble(getDouble.getText().toString());
 
+        EditText getName = (EditText) findViewById(R.id.name_input);
+        name = getName.getText().toString();
+
         tempFurniture = new Furniture(
                 getDimensions.getStringExtra("Type"),
-                findViewById(R.id.name_input).toString(),
-                length, width, height);
+                name, length, width, height);
 
         getDimensions.putExtra("NewFurniture", tempFurniture);
         setResult(RESULT_OK, getDimensions);

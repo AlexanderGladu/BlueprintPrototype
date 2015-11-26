@@ -8,6 +8,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+
 /**
  * Created by 100481892 on 11/25/2015.
  */
@@ -17,9 +19,18 @@ public class DrawView extends View {
     Canvas canvas;
     double convMetToPix;
 
-    int task = 0;
-    Furniture furniture;
-    Room room;
+    float lastX;
+    float lastY;
+    float nextX;
+    float nextY;
+
+    int task = -1;
+
+    int roomDraw = 0;
+    int furnitureDraw = 0;
+
+    ArrayList<Furniture> furniture = new ArrayList<>();
+    ArrayList<Room> room = new ArrayList<>();
 
     public DrawView(Context context) {
         super(context);
@@ -31,25 +42,72 @@ public class DrawView extends View {
 
     @Override
     public void onDraw(Canvas canvas) {
+        ArrayList<Float> points;
         if (task == 1) {
             Paint mypaint = new Paint();
+            mypaint.setColor(Color.BLACK);
+            points = drawRoom(room.get(roomDraw));
+            int pointIter = 0;
+            while (pointIter < points.size()) {
+                canvas.drawLine(points.get(pointIter),
+                                points.get(pointIter + 1),
+                                points.get(pointIter + 2),
+                                points.get(pointIter + 3),
+                                mypaint);
+                pointIter += 4;
+            }
+            invalidate();
             mypaint.setColor(Color.BLUE);
-            canvas.drawRect(30, 30, 200, 200, mypaint);
+            points = new ArrayList<>();
+            while (furnitureDraw < furniture.size()) {
+                points = drawFurniture(furniture.get(furnitureDraw));
+                pointIter = 0;
+                while (pointIter < points.size()) {
+                    canvas.drawLine(points.get(pointIter),
+                            points.get(pointIter + 1),
+                            points.get(pointIter + 2),
+                            points.get(pointIter + 3),
+                            mypaint);
+                    pointIter += 4;
+                }
+                furnitureDraw += 1;
+            }
+            invalidate();
 
-        } else {
+            furnitureDraw = 0;
+        } else if (task == 0) {
+            furniture = new ArrayList<>();
             Paint mypaint = new Paint();
-            mypaint.setColor(Color.RED);
-            canvas.drawRect(60, 60, 400, 400, mypaint);
+            mypaint.setColor(Color.BLACK);
+            points = drawRoom(room.get(roomDraw));
+            int pointIter = 0;
+            while (pointIter < points.size()) {
+                canvas.drawLine(points.get(pointIter),
+                        points.get(pointIter + 1),
+                        points.get(pointIter + 2),
+                        points.get(pointIter + 3),
+                        mypaint);
+                pointIter += 4;
+            }
+            invalidate();
         }
 
     }
 
     public void setFurniture(Furniture furniture) {
-        this.furniture = furniture;
+        this.furniture.add(furniture);
     }
 
     public void setRoom(Room room) {
-        this.room = room;
+        this.room.add(room);
+    }
+
+    public void setRoomDraw(int rmNum) {
+        this.roomDraw = rmNum;
+    }
+
+    public void setFurnitureDraw(int frnNum) {
+        this.furnitureDraw = frnNum;
     }
 
     public void setTask(int task) {
@@ -61,90 +119,233 @@ public class DrawView extends View {
         this.paint.setStrokeWidth((float) 5);
     }
 
-    public void drawFurniture(Furniture furniture) {
-        if (furniture.getLength() > furniture.getWidth()) {
-            convMetToPix = (600.0 - 40.0)/furniture.getLength();
-        } else {
-            convMetToPix = (1000.0 - 40.0)/furniture.getWidth();
-        }
+    public ArrayList<Float> drawFurniture(Furniture furniture) {
+
+        ArrayList<Float> point;
 
         if (furniture.getType().equals("Couch")) {
-            drawCouch(furniture);
+            point =  drawCouch(furniture);
         } else if (furniture.getType().equals("Chair")) {
-            drawChair(furniture);
+            point =  drawChair(furniture);
         } else if (furniture.getType().equals("Table")) {
-            drawTable(furniture);
+            point =  drawTable(furniture);
         } else {
-            drawError(furniture);
+            point = drawError(furniture);
         }
+
+        return point;
     }
 
-    public void drawCouch(Furniture furniture) {
+    public ArrayList<Float> drawCouch(Furniture furniture) {
+
+        ArrayList<Float> point = new ArrayList<>();
+
         double length = furniture.getLength()*convMetToPix;
         double width = furniture.getWidth()*convMetToPix;
 
-        this.canvas.drawLine((float) 20.0,            (float) 20.0,           (float) 20.0,            (float) (20.0 + width),  paint);
-        this.canvas.drawLine((float) 20.0,            (float) (20.0 + width), (float) (20.0 + length), (float) (20.0 + width),  paint);
-        this.canvas.drawLine((float) (20.0 + length), (float) (20.0 + width), (float) (20.0 + length), (float) 20.0,            paint);
-        this.canvas.drawLine((float) (20.0 + length), (float) 20.0,           (float) 20.0,            (float) 20.0,            paint);
+        if ((length + nextX) > (room.get(roomDraw).getLength()*convMetToPix)) {
+            nextX = lastX;
+        }
+        if ((width + nextY) > (room.get(roomDraw).getWidth()*convMetToPix)) {
+            nextY = lastY;
+            if ((width + nextY) > (room.get(roomDraw).getWidth()*convMetToPix)) {
+                drawError(furniture);
+            }
+        }
+
+        point.add((float) nextX);
+        point.add((float) nextY);
+        point.add((float) nextX);
+        point.add((float) (nextY + width));
+
+        point.add((float) nextX);
+        point.add((float) (nextY + width));
+        point.add((float) (nextX + length));
+        point.add((float) (nextY + width));
+
+        point.add((float) (nextX + length));
+        point.add((float) (nextY + width));
+        point.add((float) (nextX + length));
+        point.add((float) nextY);
+
+        point.add((float) (nextX + length));
+        point.add((float) nextY);
+        point.add((float) nextX);
+        point.add((float) nextY);
 
         double hLength = length/2.0;
 
-        this.canvas.drawLine((float) (20.0 + hLength),(float) 20.0,           (float) (20.0 + hLength),(float) (20.0 + width),  paint);
+        point.add((float) (nextX + hLength));
+        point.add((float) nextY);
+        point.add((float) (nextX + hLength));
+        point.add((float) (nextY + width));
 
         double qWidth = 3*(width/4.0);
 
-        this.canvas.drawLine((float) 20.0, (float) (20.0 + qWidth), (float) (20.0 + length), (float) (20.0 + qWidth), paint);
+        point.add((float) nextX);
+        point.add((float) (nextY + qWidth));
+        point.add((float) (nextX + length));
+        point.add((float) (nextY + qWidth));
+
+        lastX = nextX;
+        lastY = nextY;
+        nextX = nextX + (float) length;
+        nextY = nextY + (float) width;
+
+        return point;
     }
 
-    public void drawChair(Furniture furniture) {
+    public ArrayList<Float> drawChair(Furniture furniture) {
+
+        ArrayList<Float> point = new ArrayList<>();
+
         double length = furniture.getLength()*convMetToPix;
         double width = furniture.getWidth()*convMetToPix;
 
-        this.canvas.drawLine((float) 20.0,            (float) 20.0,           (float) 20.0,            (float) (20.0 + width),  paint);
-        this.canvas.drawLine((float) 20.0,            (float) (20.0 + width), (float) (20.0 + length), (float) (20.0 + width),  paint);
-        this.canvas.drawLine((float) (20.0 + length), (float) (20.0 + width), (float) (20.0 + length), (float) 20.0,            paint);
-        this.canvas.drawLine((float) (20.0 + length), (float) 20.0,           (float) 20.0,            (float) 20.0,            paint);
+        if ((length + nextX) > (room.get(roomDraw).getLength()*convMetToPix)) {
+            nextX = lastX;
+        }
+        if ((width + nextY) > (room.get(roomDraw).getWidth()*convMetToPix)) {
+            nextY = lastY;
+            if ((width + nextY) > (room.get(roomDraw).getWidth()*convMetToPix)) {
+                drawError(furniture);
+            }
+        }
+
+        point.add((float) nextX);
+        point.add((float) nextY);
+        point.add((float) nextX);
+        point.add((float) (nextY + width));
+
+        point.add((float) nextX);
+        point.add((float) (nextY + width));
+        point.add((float) (nextX + length));
+        point.add((float) (nextY + width));
+
+        point.add((float) (nextX + length));
+        point.add((float) (nextY + width));
+        point.add((float) (nextX + length));
+        point.add((float) nextY);
+
+        point.add((float) (nextX + length));
+        point.add((float) nextY);
+        point.add((float) nextX);
+        point.add((float) nextY);
 
         double qWidth = 3*(width/4.0);
 
-        this.canvas.drawLine((float) 20.0,            (float) (20.0 + qWidth),(float) (20.0 + length), (float) (20.0 + qWidth), paint);
+        point.add((float) nextX);
+        point.add((float) (nextY + qWidth));
+        point.add((float) (nextX + length));
+        point.add((float) (nextY + qWidth));
+
+        lastX = nextX;
+        lastY = nextY;
+        nextX = nextX + (float) length;
+        nextY = nextY + (float) width;
+
+        return point;
     }
 
-    public void drawTable(Furniture furniture) {
+    public ArrayList<Float> drawTable(Furniture furniture) {
+        ArrayList<Float> point = new ArrayList<>();
+
         double length = furniture.getLength()*convMetToPix;
         double width = furniture.getWidth()*convMetToPix;
 
-        this.canvas.drawLine((float) 20.0,            (float) 20.0,           (float) 20.0,            (float) (20.0 + width),  paint);
-        this.canvas.drawLine((float) 20.0,            (float) (20.0 + width), (float) (20.0 + length), (float) (20.0 + width),  paint);
-        this.canvas.drawLine((float) (20.0 + length), (float) (20.0 + width), (float) (20.0 + length), (float) 20.0,            paint);
-        this.canvas.drawLine((float) (20.0 + length), (float) 20.0,           (float) 20.0,            (float) 20.0,            paint);
+        if ((length + nextX) > (room.get(roomDraw).getLength()*convMetToPix)) {
+            nextX = lastX;
+        }
+        if ((width + nextY) > (room.get(roomDraw).getWidth()*convMetToPix)) {
+            nextY = lastY;
+            if ((width + nextY) > (room.get(roomDraw).getWidth()*convMetToPix)) {
+                drawError(furniture);
+            }
+        }
+
+        point.add((float) nextX);
+        point.add((float) nextY);
+        point.add((float) nextX);
+        point.add((float) (nextY + width));
+
+        point.add((float) nextX);
+        point.add((float) (nextY + width));
+        point.add((float) (nextX + length));
+        point.add((float) (nextY + width));
+
+        point.add((float) (nextX + length));
+        point.add((float) (nextY + width));
+        point.add((float) (nextX + length));
+        point.add((float) nextY);
+
+        point.add((float) (nextX + length));
+        point.add((float) nextY);
+        point.add((float) nextX);
+        point.add((float) nextY);
+
+        lastX = nextX;
+        lastY = nextY;
+        nextX = nextX + (float) length;
+        nextY = nextY + (float) width;
+
+        return point;
     }
 
-    public void drawError(Furniture furniture) {
-        paint.setColor(Color.RED);
+    public ArrayList<Float> drawError(Furniture furniture) {
 
-        this.canvas.drawLine((float) 20.0,            (float) 20.0,           (float) 90.0,            (float) 90.0,            paint);
+        ArrayList<Float> point = new ArrayList<>();
+
+        point.add((float) nextX);
+        point.add((float) nextY);
+        point.add((float) 500.0);
+        point.add((float) 500.0);
+
+        return point;
     }
 
-    public void drawRoom(Room room) {
+    public ArrayList<Float> drawRoom(Room room) {
+
+        ArrayList<Float> point = new ArrayList<>();
+
         if (room.getLength() > room.getWidth()) {
-            convMetToPix = (600.0 - 40.0)/room.getLength();
+            convMetToPix = (500.0 - 60.0)/room.getLength();
         } else {
-            convMetToPix = (1000.0 - 40.0)/room.getWidth();
+            convMetToPix = (800.0 - 60.0)/room.getWidth();
         }
 
         double length = room.getLength()*convMetToPix;
         double width = room.getWidth()*convMetToPix;
 
-        this.canvas.drawLine((float) 10.0,            (float) 10.0,           (float) 10.0,            (float) (10.0 + width), paint);
-        this.canvas.drawLine((float) 10.0,            (float) (10.0 + width), (float) (10.0 + length), (float) (10.0 + width), paint);
-        this.canvas.drawLine((float) (10.0 + length), (float) (10.0 + width), (float) (10.0 + length), (float) 10.0, paint);
-        this.canvas.drawLine((float) (10.0 + length), (float) 10.0,           (float) 10.0,            (float) 10.0, paint);
+        point.add((float) 20.0);
+        point.add((float) 20.0);
+        point.add((float) 20.0);
+        point.add((float) (20.0 + width));
+
+        point.add((float) 20.0);
+        point.add((float) (20.0 + width));
+        point.add((float) (20.0 + length));
+        point.add((float) (20.0 + width));
+
+        point.add((float) (20.0 + length));
+        point.add((float) (20.0 + width));
+        point.add((float) (20.0 + length));
+        point.add((float) 20.0);
+
+        point.add((float) (20.0 + length));
+        point.add((float) 20.0);
+        point.add((float) 20.0);
+        point.add((float) 20.0);
+
+        lastX = (float) 20.0;
+        lastY = (float) 20.0;
+        nextX = (float) 30.0;
+        nextY = (float) 30.0;
+
+        return point;
     }
 
     public void clearCanvas() {
-        this.canvas.drawColor(Color.WHITE);
+        canvas.drawColor(Color.WHITE);
     }
 
     public void setConvMetToPix(double convMetToPix) {

@@ -91,7 +91,8 @@ public class MainActivity extends Activity {
         if (responseCode == RESULT_OK) {
             if (requestCode == 474785743) {
                 tempFurnitures.add((Furniture) resultIntent.getSerializableExtra("NewFurniture"));
-                drawView.draw(canvas);
+                drawView.setFurnitureDraw(furnitureIter);
+                drawView.setFurniture(tempFurnitures.get(furnitureIter));
                 drawView.setTask(1);
                 drawView.draw(canvas);
                 furnitureIter += 1;
@@ -99,13 +100,18 @@ public class MainActivity extends Activity {
             } else if (requestCode == 122334) {
                 tempRooms.add((Room) resultIntent.getSerializableExtra("NewRoom"));
 
+                /*
                 roomName = (TextView) findViewById(R.id.room_name_label);
                 if (tempRooms.get(roomsIter).getName() == null) {
                     roomName.setText(getResources().getString(R.string.no_room_label));
                 } else {
                     roomName.setText(tempRooms.get(roomsIter).getName());
                 }
+                */
 
+                drawView.setRoomDraw(roomsIter);
+                drawView.setRoom(tempRooms.get(roomsIter));
+                drawView.setTask(0);
                 setContentView(drawView);
                 roomsIter += 1;
             }

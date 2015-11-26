@@ -16,6 +16,7 @@ public class AddRoomActivity extends Activity {
 
     Intent addRoomIntent;
     private Room tempRoom;
+    private String name;
     private double length;
     private double width;
     private double height;
@@ -63,8 +64,10 @@ public class AddRoomActivity extends Activity {
         getDouble = (EditText) findViewById(R.id.height_input);
         height = Double.parseDouble(getDouble.getText().toString());
 
-        tempRoom = new Room(findViewById(R.id.name_input).toString(),
-                length, width, height);
+        EditText getName = (EditText) findViewById(R.id.name_input);
+        name = getName.getText().toString();
+
+        tempRoom = new Room(name, length, width, height);
 
         addRoomIntent.putExtra("NewRoom", tempRoom);
         setResult(RESULT_OK, addRoomIntent);
