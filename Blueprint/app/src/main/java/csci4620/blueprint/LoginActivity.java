@@ -66,13 +66,17 @@ public class LoginActivity extends Activity {
         EditText passwordText = (EditText) findViewById(R.id.password_input);
         password = passwordText.getText().toString();
 
+        /**
+         * The built-in email to use is "me@email.ca" with the password "Hello"
+         */
+
         if (username.equals("me@email.ca") && password.equals("Hello")) {
             User user = new User(username, password);
             Intent loginIntent = new Intent(LoginActivity.this, MainActivity.class);
             loginIntent.putExtra("User", user);
             startActivity(loginIntent);
         } else {
-            usernameText.setHint(getResources().getString(R.string.failed_hint));
+            usernameText.setText(getResources().getString(R.string.failed_hint));
             passwordText.setText(getResources().getString(R.string.password_hint));
         }
     }

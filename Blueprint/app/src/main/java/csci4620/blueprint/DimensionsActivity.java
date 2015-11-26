@@ -57,6 +57,11 @@ public class DimensionsActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Used for furniture, as it has types, and needs to pass those values
+     * Due to rooms not needing, they don't need this activity to run
+     **/
+
     public void addDimensions(View view) {
 
         EditText getDouble = (EditText) findViewById(R.id.length_input);

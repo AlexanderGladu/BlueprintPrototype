@@ -54,6 +54,11 @@ public class AddRoomActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Parses values for dimensions straight from activity_dimensions
+     *  So it is able to not send an intent, and still get values
+     **/
+
     public void addDimensions(View view) {
         EditText getDouble = (EditText) findViewById(R.id.length_input);
         length = Double.parseDouble(getDouble.getText().toString());

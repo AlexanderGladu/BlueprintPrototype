@@ -43,6 +43,11 @@ public class DrawView extends View {
     @Override
     public void onDraw(Canvas canvas) {
         ArrayList<Float> points;
+
+        /**
+         * Draws the room that is in queue
+         */
+
         if (task == 1) {
             mypaint = new Paint();
             mypaint.setColor(Color.BLACK);
@@ -59,8 +64,22 @@ public class DrawView extends View {
             invalidate();
             mypaint.setColor(Color.BLUE);
             points = new ArrayList<>();
+
+            /**
+             * Draws all of the furniture that is added to the canvas
+             * Iterates through to makes sure all is drawn
+             */
+
             while (furnitureDraw < furniture.size()) {
                 points = drawFurniture(furniture.get(furnitureDraw));
+
+                /**
+                 * Catches an error if something is too big to fit
+                 * in a room, anddraws a red line.
+                 * Only a temporary warning, and did not implement a
+                 * way to get ris of it,
+                 */
+
                 if (errorFlag == 1) {
                     pointIter = 0;
                     while (pointIter < points.size()) {
@@ -72,9 +91,35 @@ public class DrawView extends View {
                         pointIter += 4;
                     }
                     furnitureDraw += 1;
+                    invalidate();
                     errorFlag = 0;
+
+                    /*
+
+                    /**
+                     * Re-draw the canvas after error.
+                     **
+                    canvas.drawColor(Color.WHITE);
+                    points = drawRoom(room.get(roomDraw));
+                    while (pointIter < points.size()) {
+                        canvas.drawLine(points.get(pointIter),
+                                points.get(pointIter + 1),
+                                points.get(pointIter + 2),
+                                points.get(pointIter + 3),
+                                mypaint);
+                        pointIter += 4;
+                    }
+
+                    */
                 } else {
+
+                    /**
+                     * After an error is finished, or if no error is present,
+                     * Changes the colour to blue, and draws the normal furniture
+                     */
+
                     pointIter = 0;
+                    mypaint.setColor(Color.BLUE);
                     while (pointIter < points.size()) {
                         canvas.drawLine(points.get(pointIter),
                                 points.get(pointIter + 1),
@@ -84,12 +129,17 @@ public class DrawView extends View {
                         pointIter += 4;
                     }
                     furnitureDraw += 1;
-                    invalidate();
                 }
             }
 
             furnitureDraw = 0;
         } else if (task == 0) {
+
+            /**
+             * When a new room is created, only this portion needs to be called,
+             * so there is no reference to a blank furniture arraylist.
+             */
+
             furniture = new ArrayList<>();
             mypaint = new Paint();
             mypaint.setColor(Color.BLACK);
@@ -137,6 +187,12 @@ public class DrawView extends View {
 
         ArrayList<Float> point;
 
+        /**
+         * Different furniture types require different draw points,
+         * and this parses that data, and calls the functions to
+         * get the proper points.
+         */
+
         if (furniture.getType().equals("Couch")) {
             point =  drawCouch(furniture);
         } else if (furniture.getType().equals("Chair")) {
@@ -164,11 +220,20 @@ public class DrawView extends View {
             nextY = lastY;
         }
 
+        /**
+         * Throws the error if the furniture is too wide or long
+         */
+
         if ((width + nextY) > (room.get(roomDraw).getWidth()*convMetToPix)
                 || (length + nextX) > (room.get(roomDraw).getLength()*convMetToPix)) {
             point = drawError(furniture);
             return point;
         } else {
+
+            /**
+             * Draws the main rectangle/square of the furniture.
+             */
+
             point.add((float) nextX);
             point.add((float) nextY);
             point.add((float) nextX);
@@ -191,12 +256,20 @@ public class DrawView extends View {
 
             double hLength = length/2.0;
 
+            /**
+             * Draws the middle line, creating the two cushions.
+             */
+
             point.add((float) (nextX + hLength));
             point.add((float) nextY);
             point.add((float) (nextX + hLength));
             point.add((float) (nextY + width));
 
             double qWidth = 3*(width/4.0);
+
+            /**
+             * Draws the back line to show cushions on the back of the couch
+             */
 
             point.add((float) nextX);
             point.add((float) (nextY + qWidth));
@@ -226,11 +299,20 @@ public class DrawView extends View {
             nextY = lastY;
         }
 
+        /**
+         * Throws the error if the furniture is too wide or long
+         */
+
         if ((width + nextY) > (room.get(roomDraw).getWidth()*convMetToPix)
                 || (length + nextX) > (room.get(roomDraw).getLength()*convMetToPix)) {
             point = drawError(furniture);
             return point;
         } else {
+
+            /**
+             * Draws the main rectangle/square of the furniture.
+             */
+
             point.add((float) nextX);
             point.add((float) nextY);
             point.add((float) nextX);
@@ -252,6 +334,10 @@ public class DrawView extends View {
             point.add((float) nextY);
 
             double qWidth = 3 * (width / 4.0);
+
+            /**
+             * Draws the back line to show cushions on the back of the chair
+             */
 
             point.add((float) nextX);
             point.add((float) (nextY + qWidth));
@@ -280,11 +366,20 @@ public class DrawView extends View {
             nextY = lastY;
         }
 
+        /**
+         * Throws the error if the furniture is too wide or long
+         */
+
         if ((width + nextY) > (room.get(roomDraw).getWidth()*convMetToPix)
                 || (length + nextX) > (room.get(roomDraw).getLength()*convMetToPix)) {
             point = drawError(furniture);
             return point;
         } else {
+
+            /**
+             * Draws the main rectangle/square of the furniture.
+             */
+
             point.add((float) nextX);
             point.add((float) nextY);
             point.add((float) nextX);
@@ -321,10 +416,10 @@ public class DrawView extends View {
         mypaint.setColor(Color.RED);
         errorFlag = 1;
 
-        point.add((float) nextX);
-        point.add((float) nextY);
-        point.add((float) 1000.0);
-        point.add((float) 1000.0);
+        point.add((float) 0.0);
+        point.add((float) 0.0);
+        point.add((float) 600.0);
+        point.add((float) 600.0);
 
         return point;
     }
@@ -332,6 +427,12 @@ public class DrawView extends View {
     public ArrayList<Float> drawRoom(Room room) {
 
         ArrayList<Float> point = new ArrayList<>();
+
+        /**
+         * This is the scale that determines how much a meter is in terms
+         * of pixels. When this is created, the convert value is assigned, and used
+         * when drawing the rooms, and furniture.
+         */
 
         if (room.getLength() > room.getWidth()) {
             convMetToPix = (500.0 - 60.0)/room.getLength();
@@ -341,6 +442,10 @@ public class DrawView extends View {
 
         double length = room.getLength()*convMetToPix;
         double width = room.getWidth()*convMetToPix;
+
+        /**
+        * Draws the main rectangle/square of the room.
+        */
 
         point.add((float) 20.0);
         point.add((float) 20.0);

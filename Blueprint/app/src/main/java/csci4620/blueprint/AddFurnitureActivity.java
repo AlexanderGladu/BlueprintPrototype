@@ -49,6 +49,10 @@ public class AddFurnitureActivity extends Activity {
     public void onActivityResult(int requestCode, int responseCode, Intent resultIntent) {
         super.onActivityResult(requestCode, responseCode, resultIntent);
 
+        /**
+         * Sends a new Furniture back to Main
+         **/
+
         if (responseCode == RESULT_OK) {
             tempFurniture = (Furniture) resultIntent.getSerializableExtra("NewFurniture");
 
@@ -57,6 +61,10 @@ public class AddFurnitureActivity extends Activity {
             finish();
         }
     }
+
+    /**
+     * Three functions call addItem with different type params
+     **/
 
     public void addCouch(View view) {
         addItem("Couch");
@@ -69,6 +77,10 @@ public class AddFurnitureActivity extends Activity {
     public void addTable(View view) {
         addItem("Table");
     }
+
+    /**
+     * Sends an intent to the dimension activity to get item dimensions
+     **/
 
     public void addItem(String type) {
         Intent getDimensionsIntent = new Intent(AddFurnitureActivity.this, DimensionsActivity.class);
